@@ -1,0 +1,35 @@
+{
+  "type": "module",
+  "name": "browserbase-js",
+  "version": "1.0.0",
+  "description": "Browserbase JS SDK",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsx --test test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/browserbase/js-sdk.git"
+  },
+  "keywords": [
+    "automation",
+    "testing",
+    "playwright"
+  ],
+  "author": "Browserbase <info@browserbase.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/browserbase/js-sdk/issues"
+  },
+  "homepage": "https://github.com/browserbase/js-sdk#readme",
+  "dependencies": {
+    "playwright": "^1.43.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "chai": "^5.1.0",
+    "tsx": "^4.7.2",
+    "typescript": "^4.9.5"
+  }
+}
