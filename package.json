@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/browserbase/js-sdk#readme",
   "dependencies": {
-    "playwright": "^1.43.1"
+    "playwright": "^1.43.1",
+    "zod": "^3.22.5"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

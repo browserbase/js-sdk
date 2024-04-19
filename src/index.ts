@@ -1,10 +1,10 @@
 import { chromium } from 'playwright'
 
-type BrowserbaseLoadOptions = {
+export type BrowserbaseLoadOptions = {
   textContent?: boolean
 }
 
-type BrowserbaseScreenshotOptions = {
+export type BrowserbaseScreenshotOptions = {
   fullPage?: boolean
 }
 
@@ -17,20 +17,20 @@ export default class Browserbase {
 
   load(
     url: string | string[],
-    options: BrowserbaseLoadOptions = { textContent: false }
+    options: BrowserbaseLoadOptions = { }
   ) {
     if (typeof url === 'string') {
-      return this.loadUrl(url, options)
+      return this.loadURL(url, options)
     } else if (Array.isArray(url)) {
-      return this.loadUrls(url, options)
+      return this.loadURLs(url, options)
     } else {
       throw new TypeError('Input must be a URL string or array of URLs')
     }
   }
 
-  async loadUrl(
+  async loadURL(
     url: string,
-    options: BrowserbaseLoadOptions = { textContent: false }
+    options: BrowserbaseLoadOptions = { }
   ): Promise<string> {
     if (!url) {
       throw new Error('Page URL was not provided')
@@ -59,9 +59,9 @@ export default class Browserbase {
     return html
   }
 
-  async *loadUrls(
+  async *loadURLs(
     urls: string[],
-    options: BrowserbaseLoadOptions = { textContent: false }
+    options: BrowserbaseLoadOptions = { }
   ): AsyncGenerator<string> {
     if (!urls.length) {
       throw new Error('Page URLs were not provided')
