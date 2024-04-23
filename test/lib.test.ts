@@ -23,8 +23,12 @@ describe('Browserbase', () => {
   })
 
   it('should load URLs', async () => {
-    const result = await browserbase.loadURLs(['https://example.com']).next()
-    expect(result.value).contain('Example Domain')
+    const result = await browserbase.loadURLs(['https://example.com'])
+    const page = await result.next()
+
+    // finish iterator
+    result.next()
+    expect(page.value).contain('Example Domain')
   })
 
   it('should take a screenshot', { timeout: 10000 }, async () => {

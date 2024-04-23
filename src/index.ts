@@ -15,10 +15,7 @@ export default class Browserbase {
     this.apiKey = apiKey || process.env.BROWSERBASE_API_KEY!
   }
 
-  load(
-    url: string | string[],
-    options: BrowserbaseLoadOptions = { }
-  ) {
+  load(url: string | string[], options: BrowserbaseLoadOptions = {}) {
     if (typeof url === 'string') {
       return this.loadURL(url, options)
     } else if (Array.isArray(url)) {
@@ -30,7 +27,7 @@ export default class Browserbase {
 
   async loadURL(
     url: string,
-    options: BrowserbaseLoadOptions = { }
+    options: BrowserbaseLoadOptions = {}
   ): Promise<string> {
     if (!url) {
       throw new Error('Page URL was not provided')
@@ -61,7 +58,7 @@ export default class Browserbase {
 
   async *loadURLs(
     urls: string[],
-    options: BrowserbaseLoadOptions = { }
+    options: BrowserbaseLoadOptions = {}
   ): AsyncGenerator<string> {
     if (!urls.length) {
       throw new Error('Page URLs were not provided')
