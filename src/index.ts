@@ -109,3 +109,5 @@ export default class Browserbase {
     return screenshot
   }
 }
+
+export { Browserbase }

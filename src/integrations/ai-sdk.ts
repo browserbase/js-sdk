@@ -17,3 +17,5 @@ export default function BrowserbaseAISDK(
     },
   }
 }
+
+export { BrowserbaseAISDK }
