@@ -1,5 +1,7 @@
 import { chromium } from 'playwright'
 
+export * from './utilities.js'
+
 export type BrowserbaseLoadOptions = {
   textContent?: boolean
 }
