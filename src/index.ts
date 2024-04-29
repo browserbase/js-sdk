@@ -1,7 +1,7 @@
 import { chromium } from 'playwright'
 
 export type BrowserbaseLoadOptions = {
-  textContent?: boolean
+  textContentOnly?: boolean
 }
 
 export type BrowserbaseScreenshotOptions = {
@@ -41,7 +41,7 @@ export default class Browserbase {
     await page.goto(url)
     let html = await page.content()
 
-    if (options.textContent) {
+    if (options.textContentOnly) {
       const readable = await page.evaluate(async () => {
         const readability = await import(
           // @ts-ignore
@@ -74,7 +74,7 @@ export default class Browserbase {
       await page.goto(url)
       let html = await page.content()
 
-      if (options.textContent) {
+      if (options.textContentOnly) {
         const readable = await page.evaluate(async () => {
           const readability = await import(
             // @ts-ignore
@@ -103,7 +103,7 @@ export default class Browserbase {
       `wss://api.browserbase.com?apiKey=${this.apiKey}`
     )
     const page = await browser.newPage()
-    await page.goto(url)
+    await page.goto(url, { waitUntil: "domcontentloaded"  })
     const screenshot = await page.screenshot({ fullPage: options.fullPage })
     await browser.close()
     return screenshot
