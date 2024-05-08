@@ -8,8 +8,12 @@ export type ClientOptions = {
   baseConnectURL?: string
 }
 
-export type LoadOptions = {
+export type ConnectOptions = {
   sessionId?: string
+  proxy?: boolean
+}
+
+export type LoadOptions = ConnectOptions & {
   textContent?: boolean
 }
 
@@ -106,8 +110,7 @@ export default class Browserbase {
     this.baseConnectURL = options.baseConnectURL || 'wss://connect.browserbase.com'
   }
 
-  // `await chromium.connectOverCDP(browserbase.connectUrl())
-  public connectUrl({ sessionId, proxy= false }: { sessionId?: string, proxy?: boolean } = {}) : string {
+  public connectUrl({ sessionId, proxy= false }: ConnectOptions = {}) : string {
     return `${this.baseConnectURL}?apiKey=${this.apiKey}${sessionId ? `&sessionId=${sessionId}` : ''}${proxy ? `&enableProxy=true` : ''}`
   }
 
@@ -261,7 +264,7 @@ export default class Browserbase {
     }
 
     const browser = await chromium.connectOverCDP(
-      `wss://api.browserbase.com?apiKey=${this.apiKey}`
+      this.connectUrl({ sessionId: options.sessionId, proxy: options.proxy })
     )
     const defaultContext = browser.contexts()[0]
     const page = defaultContext.pages()[0]
@@ -292,7 +295,7 @@ export default class Browserbase {
     }
 
     const browser = await chromium.connectOverCDP(
-      `wss://api.browserbase.com?apiKey=${this.apiKey}`
+      this.connectUrl({ sessionId: options.sessionId, proxy: options.proxy })
     )
     const defaultContext = browser.contexts()[0]
     const page = defaultContext.pages()[0]
