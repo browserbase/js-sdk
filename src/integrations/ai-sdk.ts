@@ -1,9 +1,9 @@
 import { z } from 'zod'
-import Browserbase, { BrowserbaseLoadOptions } from '../index.js'
+import Browserbase, { LoadOptions } from '../index.js'
 
 export default function BrowserbaseAISDK(
   b: Browserbase,
-  options: BrowserbaseLoadOptions = {}
+  options: LoadOptions = {}
 ) {
   return {
     description:

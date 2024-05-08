@@ -10,6 +10,33 @@ describe('Browserbase', () => {
     browserbase = new Browserbase()
   })
 
+  it('shoud create and retrieve session', async () => {
+    const { id } = await browserbase.createSession()
+    const session = await browserbase.getSession(id)
+
+    expect(session.status).to.equal('RUNNING')
+    expect(session.id).to.equal(id)
+  })
+
+  it('shoud create and update session', async () => {
+    const { id } = await browserbase.createSession()
+    const updated = await browserbase.updateSession(id, { status: 'RELEASING' })
+
+    expect(updated.status).to.equal('COMPLETED')
+  })
+
+  it('shoud create a session and retrieve a recording', async () => {
+    const { id } = await browserbase.createSession()
+    const recording = await browserbase.getSessionRecording(id)
+
+    expect(recording.length).to.equal(0)
+  })
+
+  it('shoud create a session and get debug url', async () => {
+    const { id } = await browserbase.createSession()
+    const debug = await browserbase.getDebugConnectionURLs(id)
+  })
+
   it('should load a webpage', async () => {
     const result = await browserbase.load('https://example.com')
     expect(result).contain('Example Domain')
@@ -19,6 +46,7 @@ describe('Browserbase', () => {
     const result = await browserbase.load('https://example.com/', {
       textContent: true,
     })
+
     expect(result).contain('Example Domain')
   })
 

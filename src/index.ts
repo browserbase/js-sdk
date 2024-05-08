@@ -1,21 +1,243 @@
 import { chromium } from 'playwright'
+import fs from 'fs/promises'
 
-export type BrowserbaseLoadOptions = {
+export type ClientOptions = {
+  apiKey?: string
+  projectId?: string
+  baseURL?: string
+}
+
+export type LoadOptions = {
+  sessionId?: string
   textContent?: boolean
 }
 
-export type BrowserbaseScreenshotOptions = {
+export type ScreenshotOptions = {
   fullPage?: boolean
+}
+
+export type CreateSessionOptions = {
+  projectId?: string
+  extensionId?: string
+  fingerprint?: {
+    browserListQuery?: string
+    httpVersion?: 1 | 2
+    browsers?: Array<'chrome' | 'firefox' | 'edge' | 'safari'>
+    devices?: Array<'desktop' | 'mobile'>
+    locales?: string[]
+    operatingSystems?: Array<'windows' | 'macos' | 'linux' | 'ios' | 'android'>
+    screen?: {
+      maxHeight?: number
+      maxWidth?: number
+      minHeight?: number
+      minWidth?: number
+    }
+  }
+}
+
+export type Session = {
+  id: string
+  createdAt: string
+  startedAt: string
+  endedAt: string
+  projectId: string
+  status:
+    | 'NEW'
+    | 'CREATED'
+    | 'ERROR'
+    | 'RUNNING'
+    | 'REQUEST_RELEASE'
+    | 'RELEASING'
+  taskId: string
+  proxyBytes: number
+  expiresAt: string
+  avg_cpu_usage: number
+  memory_usage: number
+  details: string
+  logs: string
+}
+
+export type UpdateSessionOptions = {
+  projectId?: string
+  status: Session['status']
+}
+
+export type SessionRecording = {
+  type: number
+  timestamp: number
+  data: object
+}
+
+export type SessionLog = {
+  sessionId: string
+  id: string
+  timestamp: string
+  method: string
+  request: {
+    timestamp: string
+    params: object
+    rawBody: string
+  }
+  response: {
+    timestamp: string
+    result: object
+    rawBody: string
+  }
+  pageId: string
+}
+
+export type DebugConnectionURLs = {
+  debuggerFullscreenUrl: string
+  debuggerUrl: string
+  wsUrl: string
 }
 
 export default class Browserbase {
   private apiKey: string
+  private projectId: string
+  private baseURL: string
 
-  constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.BROWSERBASE_API_KEY!
+  constructor(options: ClientOptions = {}) {
+    this.apiKey = options.apiKey || process.env.BROWSERBASE_API_KEY!
+    this.projectId = options.projectId || process.env.BROWSERBASE_PROJECT_ID!
+    this.baseURL = options.baseURL || 'https://www.browserbase.com'
   }
 
-  load(url: string | string[], options: BrowserbaseLoadOptions = {}) {
+  async listSessions(): Promise<Session[]> {
+    const response = await fetch(`${this.baseURL}/v1/sessions`, {
+      headers: {
+        'x-bb-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    return await response.json()
+  }
+
+  async createSession(options?: CreateSessionOptions): Promise<Session> {
+    const response = await fetch(`${this.baseURL}/v1/sessions`, {
+      method: 'POST',
+      headers: {
+        'x-bb-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ projectId: this.projectId, ...options }),
+    })
+
+    return await response.json()
+  }
+
+  async getSession(sessionId: string): Promise<Session> {
+    const response = await fetch(`${this.baseURL}/v1/sessions/${sessionId}`, {
+      headers: {
+        'x-bb-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    return await response.json()
+  }
+
+  async updateSession(
+    sessionId: string,
+    options: UpdateSessionOptions
+  ): Promise<Session> {
+    const response = await fetch(`${this.baseURL}/v1/sessions/${sessionId}`, {
+      method: 'POST',
+      headers: {
+        'x-bb-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ projectId: this.projectId, ...options }),
+    })
+
+    return await response.json()
+  }
+
+  async getSessionRecording(sessionId: string): Promise<SessionRecording[]> {
+    const response = await fetch(
+      `${this.baseURL}/v1/sessions/${sessionId}/recording`,
+      {
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    return await response.json()
+  }
+
+  async getSessionLogs(sessionId: string): Promise<SessionLog[]> {
+    const response = await fetch(
+      `${this.baseURL}/v1/sessions/${sessionId}/logs`,
+      {
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    return await response.json()
+  }
+
+  async getSessionDownloads(
+    sessionId: string,
+    filePath: string,
+    retryInterval: number = 2000,
+    retryCount: number = 2
+  ) {
+    return new Promise<void>((resolve, reject) => {
+      const fetchDownload = async () => {
+        const response = await fetch(
+          `${this.baseURL}/v1/sessions/${sessionId}/downloads`,
+          {
+            method: 'GET',
+            headers: {
+              'x-bb-api-key': this.apiKey,
+            },
+          }
+        )
+
+        const arrayBuffer = await response.arrayBuffer()
+        if (arrayBuffer.byteLength > 0) {
+          const buffer = Buffer.from(arrayBuffer)
+          await fs.writeFile(filePath, buffer)
+          resolve()
+        } else {
+          retryCount--
+          if (retryCount <= 0) {
+            reject()
+          }
+
+          setTimeout(fetchDownload, retryInterval)
+        }
+      }
+
+      fetchDownload()
+    })
+  }
+
+  async getDebugConnectionURLs(
+    sessionId: string
+  ): Promise<DebugConnectionURLs> {
+    const response = await fetch(
+      `${this.baseURL}/v1/sessions/${sessionId}/debug`,
+      {
+        method: 'GET',
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const json = await response.json()
+    return json
+  }
+
+  load(url: string | string[], options: LoadOptions = {}) {
     if (typeof url === 'string') {
       return this.loadURL(url, options)
     } else if (Array.isArray(url)) {
@@ -25,10 +247,7 @@ export default class Browserbase {
     }
   }
 
-  async loadURL(
-    url: string,
-    options: BrowserbaseLoadOptions = {}
-  ): Promise<string> {
+  async loadURL(url: string, options: LoadOptions = {}): Promise<string> {
     if (!url) {
       throw new Error('Page URL was not provided')
     }
@@ -58,7 +277,7 @@ export default class Browserbase {
 
   async *loadURLs(
     urls: string[],
-    options: BrowserbaseLoadOptions = {}
+    options: LoadOptions = {}
   ): AsyncGenerator<string> {
     if (!urls.length) {
       throw new Error('Page URLs were not provided')
@@ -93,7 +312,7 @@ export default class Browserbase {
 
   async screenshot(
     url: string,
-    options: BrowserbaseScreenshotOptions = { fullPage: false }
+    options: ScreenshotOptions = { fullPage: false }
   ): Promise<Buffer> {
     if (!url) {
       throw new Error('Page URL was not provided')
