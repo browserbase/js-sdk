@@ -5,10 +5,15 @@ export type ClientOptions = {
   apiKey?: string
   projectId?: string
   baseURL?: string
+  baseConnectURL?: string
 }
 
-export type LoadOptions = {
+export type ConnectOptions = {
   sessionId?: string
+  proxy?: boolean
+}
+
+export type LoadOptions = ConnectOptions & {
   textContent?: boolean
 }
 
@@ -95,16 +100,22 @@ export type DebugConnectionURLs = {
 export default class Browserbase {
   private apiKey: string
   private projectId: string
-  private baseURL: string
+  private baseApiURL: string
+  private baseConnectURL: string
 
   constructor(options: ClientOptions = {}) {
     this.apiKey = options.apiKey || process.env.BROWSERBASE_API_KEY!
     this.projectId = options.projectId || process.env.BROWSERBASE_PROJECT_ID!
-    this.baseURL = options.baseURL || 'https://www.browserbase.com'
+    this.baseApiURL = options.baseURL || 'https://www.browserbase.com'
+    this.baseConnectURL = options.baseConnectURL || 'wss://connect.browserbase.com'
+  }
+
+  public connectUrl({ sessionId, proxy= false }: ConnectOptions = {}) : string {
+    return `${this.baseConnectURL}?apiKey=${this.apiKey}${sessionId ? `&sessionId=${sessionId}` : ''}${proxy ? `&enableProxy=true` : ''}`
   }
 
   async listSessions(): Promise<Session[]> {
-    const response = await fetch(`${this.baseURL}/v1/sessions`, {
+    const response = await fetch(`${this.baseApiURL}/v1/sessions`, {
       headers: {
         'x-bb-api-key': this.apiKey,
         'Content-Type': 'application/json',
@@ -115,7 +126,7 @@ export default class Browserbase {
   }
 
   async createSession(options?: CreateSessionOptions): Promise<Session> {
-    const response = await fetch(`${this.baseURL}/v1/sessions`, {
+    const response = await fetch(`${this.baseApiURL}/v1/sessions`, {
       method: 'POST',
       headers: {
         'x-bb-api-key': this.apiKey,
@@ -128,7 +139,7 @@ export default class Browserbase {
   }
 
   async getSession(sessionId: string): Promise<Session> {
-    const response = await fetch(`${this.baseURL}/v1/sessions/${sessionId}`, {
+    const response = await fetch(`${this.baseApiURL}/v1/sessions/${sessionId}`, {
       headers: {
         'x-bb-api-key': this.apiKey,
         'Content-Type': 'application/json',
@@ -142,7 +153,7 @@ export default class Browserbase {
     sessionId: string,
     options: UpdateSessionOptions
   ): Promise<Session> {
-    const response = await fetch(`${this.baseURL}/v1/sessions/${sessionId}`, {
+    const response = await fetch(`${this.baseApiURL}/v1/sessions/${sessionId}`, {
       method: 'POST',
       headers: {
         'x-bb-api-key': this.apiKey,
@@ -156,7 +167,7 @@ export default class Browserbase {
 
   async getSessionRecording(sessionId: string): Promise<SessionRecording[]> {
     const response = await fetch(
-      `${this.baseURL}/v1/sessions/${sessionId}/recording`,
+      `${this.baseApiURL}/v1/sessions/${sessionId}/recording`,
       {
         headers: {
           'x-bb-api-key': this.apiKey,
@@ -170,7 +181,7 @@ export default class Browserbase {
 
   async getSessionLogs(sessionId: string): Promise<SessionLog[]> {
     const response = await fetch(
-      `${this.baseURL}/v1/sessions/${sessionId}/logs`,
+      `${this.baseApiURL}/v1/sessions/${sessionId}/logs`,
       {
         headers: {
           'x-bb-api-key': this.apiKey,
@@ -191,7 +202,7 @@ export default class Browserbase {
     return new Promise<void>((resolve, reject) => {
       const fetchDownload = async () => {
         const response = await fetch(
-          `${this.baseURL}/v1/sessions/${sessionId}/downloads`,
+          `${this.baseApiURL}/v1/sessions/${sessionId}/downloads`,
           {
             method: 'GET',
             headers: {
@@ -223,7 +234,7 @@ export default class Browserbase {
     sessionId: string
   ): Promise<DebugConnectionURLs> {
     const response = await fetch(
-      `${this.baseURL}/v1/sessions/${sessionId}/debug`,
+      `${this.baseApiURL}/v1/sessions/${sessionId}/debug`,
       {
         method: 'GET',
         headers: {
@@ -253,7 +264,7 @@ export default class Browserbase {
     }
 
     const browser = await chromium.connectOverCDP(
-      `wss://api.browserbase.com?apiKey=${this.apiKey}`
+      this.connectUrl({ sessionId: options.sessionId, proxy: options.proxy })
     )
     const defaultContext = browser.contexts()[0]
     const page = defaultContext.pages()[0]
@@ -284,7 +295,7 @@ export default class Browserbase {
     }
 
     const browser = await chromium.connectOverCDP(
-      `wss://api.browserbase.com?apiKey=${this.apiKey}`
+      this.connectUrl({ sessionId: options.sessionId, proxy: options.proxy })
     )
     const defaultContext = browser.contexts()[0]
     const page = defaultContext.pages()[0]
