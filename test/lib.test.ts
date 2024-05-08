@@ -51,7 +51,7 @@ describe('Browserbase', () => {
   })
 
   it('should load URLs', async () => {
-    const result = await browserbase.loadURLs(['https://example.com'])
+    const result = await browserbase.loadUrls(['https://example.com'])
     const page = await result.next()
 
     // finish iterator

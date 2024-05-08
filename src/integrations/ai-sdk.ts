@@ -12,7 +12,7 @@ export default function BrowserbaseAISDK(
       url: z.string().describe('Page URL to be loaded'),
     }),
     execute: async ({ url }: { url: string }) => {
-      const page = await b.loadURL(url, options)
+      const page = await b.loadUrl(url, options)
       return { page }
     },
   }

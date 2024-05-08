@@ -13,13 +13,13 @@ export type ConnectOptions = {
   proxy?: boolean
 }
 
-export type LoadOptions = ConnectOptions & {
+export type LoadOptions = {
   textContent?: boolean
-}
+} & ConnectOptions
 
 export type ScreenshotOptions = {
   fullPage?: boolean
-}
+} & ConnectOptions
 
 export type CreateSessionOptions = {
   projectId?: string
@@ -107,11 +107,14 @@ export default class Browserbase {
     this.apiKey = options.apiKey || process.env.BROWSERBASE_API_KEY!
     this.projectId = options.projectId || process.env.BROWSERBASE_PROJECT_ID!
     this.baseApiURL = options.baseURL || 'https://www.browserbase.com'
-    this.baseConnectURL = options.baseConnectURL || 'wss://connect.browserbase.com'
+    this.baseConnectURL =
+      options.baseConnectURL || 'wss://connect.browserbase.com'
   }
 
-  public connectUrl({ sessionId, proxy= false }: ConnectOptions = {}) : string {
-    return `${this.baseConnectURL}?apiKey=${this.apiKey}${sessionId ? `&sessionId=${sessionId}` : ''}${proxy ? `&enableProxy=true` : ''}`
+  connectUrl({ sessionId, proxy = false }: ConnectOptions = {}): string {
+    return `${this.baseConnectURL}?apiKey=${this.apiKey}${
+      sessionId ? `&sessionId=${sessionId}` : ''
+    }${proxy ? `&enableProxy=true` : ''}`
   }
 
   async listSessions(): Promise<Session[]> {
@@ -139,12 +142,15 @@ export default class Browserbase {
   }
 
   async getSession(sessionId: string): Promise<Session> {
-    const response = await fetch(`${this.baseApiURL}/v1/sessions/${sessionId}`, {
-      headers: {
-        'x-bb-api-key': this.apiKey,
-        'Content-Type': 'application/json',
-      },
-    })
+    const response = await fetch(
+      `${this.baseApiURL}/v1/sessions/${sessionId}`,
+      {
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
 
     return await response.json()
   }
@@ -153,14 +159,17 @@ export default class Browserbase {
     sessionId: string,
     options: UpdateSessionOptions
   ): Promise<Session> {
-    const response = await fetch(`${this.baseApiURL}/v1/sessions/${sessionId}`, {
-      method: 'POST',
-      headers: {
-        'x-bb-api-key': this.apiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ projectId: this.projectId, ...options }),
-    })
+    const response = await fetch(
+      `${this.baseApiURL}/v1/sessions/${sessionId}`,
+      {
+        method: 'POST',
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectId: this.projectId, ...options }),
+      }
+    )
 
     return await response.json()
   }
@@ -250,15 +259,15 @@ export default class Browserbase {
 
   load(url: string | string[], options: LoadOptions = {}) {
     if (typeof url === 'string') {
-      return this.loadURL(url, options)
+      return this.loadUrl(url, options)
     } else if (Array.isArray(url)) {
-      return this.loadURLs(url, options)
+      return this.loadUrls(url, options)
     } else {
       throw new TypeError('Input must be a URL string or array of URLs')
     }
   }
 
-  async loadURL(url: string, options: LoadOptions = {}): Promise<string> {
+  async loadUrl(url: string, options: LoadOptions = {}): Promise<string> {
     if (!url) {
       throw new Error('Page URL was not provided')
     }
@@ -286,7 +295,7 @@ export default class Browserbase {
     return html
   }
 
-  async *loadURLs(
+  async *loadUrls(
     urls: string[],
     options: LoadOptions = {}
   ): AsyncGenerator<string> {
@@ -330,7 +339,7 @@ export default class Browserbase {
     }
 
     const browser = await chromium.connectOverCDP(
-      `wss://api.browserbase.com?apiKey=${this.apiKey}`
+      this.connectUrl({ sessionId: options.sessionId, proxy: options.proxy })
     )
     const page = await browser.newPage()
     await page.goto(url)
