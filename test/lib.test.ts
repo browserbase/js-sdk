@@ -10,6 +10,11 @@ describe('Browserbase', () => {
     browserbase = new Browserbase()
   })
 
+  it('shoud list sessions', async () => {
+    const session = await browserbase.listSessions()
+    expect(session[0].status).to.equal('COMPLETED')
+  })
+
   it('shoud create and retrieve session', async () => {
     const { id } = await browserbase.createSession()
     const session = await browserbase.getSession(id)

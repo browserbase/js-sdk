@@ -1,5 +1,4 @@
 import { chromium } from 'playwright'
-import fs from 'fs/promises'
 
 export type ClientOptions = {
   apiKey?: string
@@ -69,8 +68,8 @@ export type UpdateSessionOptions = {
 }
 
 export type SessionRecording = {
-  type?: number
-  timestamp?: number
+  type?: string
+  time?: string
   data?: object
 }
 
@@ -189,27 +188,12 @@ export default class Browserbase {
     return await response.json()
   }
 
-  async getSessionLogs(sessionId: string): Promise<SessionLog[]> {
-    const response = await fetch(
-      `${this.baseAPIURL}/v1/sessions/${sessionId}/logs`,
-      {
-        headers: {
-          'x-bb-api-key': this.apiKey,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-
-    return await response.json()
-  }
-
   async getSessionDownloads(
     sessionId: string,
-    filePath: string,
     retryInterval: number = 2000,
     retryCount: number = 2
   ) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<Buffer>((resolve, reject) => {
       const fetchDownload = async () => {
         const response = await fetch(
           `${this.baseAPIURL}/v1/sessions/${sessionId}/downloads`,
@@ -223,9 +207,7 @@ export default class Browserbase {
 
         const arrayBuffer = await response.arrayBuffer()
         if (arrayBuffer.byteLength > 0) {
-          const buffer = Buffer.from(arrayBuffer)
-          await fs.writeFile(filePath, buffer)
-          resolve()
+          resolve(Buffer.from(arrayBuffer))
         } else {
           retryCount--
           if (retryCount <= 0) {
@@ -256,6 +238,20 @@ export default class Browserbase {
 
     const json = await response.json()
     return json
+  }
+
+  async getSessionLogs(sessionId: string): Promise<SessionLog[]> {
+    const response = await fetch(
+      `${this.baseAPIURL}/v1/sessions/${sessionId}/logs`,
+      {
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    return await response.json()
   }
 
   load(url: string | string[], options: LoadOptions = {}) {
