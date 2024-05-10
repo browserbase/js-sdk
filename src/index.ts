@@ -46,20 +46,21 @@ export type Session = {
   startedAt: string
   endedAt: string
   projectId: string
-  status:
+  status?:
     | 'NEW'
     | 'CREATED'
     | 'ERROR'
     | 'RUNNING'
     | 'REQUEST_RELEASE'
     | 'RELEASING'
-  taskId: string
-  proxyBytes: number
-  expiresAt: string
-  avg_cpu_usage: number
-  memory_usage: number
-  details: string
-  logs: string
+    | 'COMPLETED'
+  taskId?: string
+  proxyBytes?: number
+  expiresAt?: string
+  avg_cpu_usage?: number
+  memory_usage?: number
+  details?: string
+  logs?: string
 }
 
 export type UpdateSessionOptions = {
@@ -68,33 +69,33 @@ export type UpdateSessionOptions = {
 }
 
 export type SessionRecording = {
-  type: number
-  timestamp: number
-  data: object
+  type?: number
+  timestamp?: number
+  data?: object
 }
 
 export type SessionLog = {
-  sessionId: string
+  sessionId?: string
   id: string
-  timestamp: string
-  method: string
-  request: {
-    timestamp: string
-    params: object
-    rawBody: string
+  timestamp?: string
+  method?: string
+  request?: {
+    timestamp?: string
+    params?: object
+    rawBody?: string
   }
-  response: {
-    timestamp: string
-    result: object
-    rawBody: string
+  response?: {
+    timestamp?: string
+    result?: object
+    rawBody?: string
   }
-  pageId: string
+  pageId?: string
 }
 
 export type DebugConnectionURLs = {
-  debuggerFullscreenUrl: string
-  debuggerUrl: string
-  wsUrl: string
+  debuggerFullscreenUrl?: string
+  debuggerUrl?: string
+  wsUrl?: string
 }
 
 export default class Browserbase {
