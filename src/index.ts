@@ -62,11 +62,6 @@ export type Session = {
   logs?: string
 }
 
-export type UpdateSessionOptions = {
-  projectId?: string
-  status: Session['status']
-}
-
 export type SessionRecording = {
   type?: string
   time?: string
@@ -149,25 +144,6 @@ export default class Browserbase {
           'x-bb-api-key': this.apiKey,
           'Content-Type': 'application/json',
         },
-      }
-    )
-
-    return await response.json()
-  }
-
-  async updateSession(
-    sessionId: string,
-    options: UpdateSessionOptions
-  ): Promise<Session> {
-    const response = await fetch(
-      `${this.baseAPIURL}/v1/sessions/${sessionId}`,
-      {
-        method: 'POST',
-        headers: {
-          'x-bb-api-key': this.apiKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ projectId: this.projectId, ...options }),
       }
     )
 
