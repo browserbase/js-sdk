@@ -43,7 +43,7 @@ export type Session = {
   id: string
   createdAt: string
   startedAt: string
-  endedAt: string
+  endedAt?: string
   projectId: string
   status?:
     | 'NEW'
@@ -68,6 +68,12 @@ export type SessionRecording = {
   data?: object
 }
 
+export type DebugConnectionURLs = {
+  debuggerFullscreenUrl?: string
+  debuggerUrl?: string
+  wsUrl?: string
+}
+
 export type SessionLog = {
   sessionId?: string
   id: string
@@ -84,12 +90,6 @@ export type SessionLog = {
     rawBody?: string
   }
   pageId?: string
-}
-
-export type DebugConnectionURLs = {
-  debuggerFullscreenUrl?: string
-  debuggerUrl?: string
-  wsUrl?: string
 }
 
 export default class Browserbase {

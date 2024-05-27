@@ -42,6 +42,13 @@ describe('Browserbase', () => {
     const debug = await browserbase.getDebugConnectionURLs(id)
   })
 
+  it('shoud create a session and get session logs', async () => {
+    const { id } = await browserbase.createSession()
+    const logs = await browserbase.getSessionLogs(id)
+
+    expect(logs.length).to.equal(0)
+  })
+
   it('should load a webpage', async () => {
     const result = await browserbase.load('https://example.com')
     expect(result).contain('Example Domain')
