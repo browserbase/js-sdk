@@ -1,4 +1,5 @@
 import { chromium } from 'playwright'
+import BrowserbaseAISDK from './integrations/ai-sdk.js'
 
 export type ClientOptions = {
   apiKey?: string
@@ -322,4 +323,4 @@ export default class Browserbase {
   }
 }
 
-export { Browserbase }
+export { Browserbase, BrowserbaseAISDK }

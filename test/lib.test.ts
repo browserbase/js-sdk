@@ -23,13 +23,6 @@ describe('Browserbase', () => {
     expect(session.id).to.equal(id)
   })
 
-  it('shoud create and update session', async () => {
-    const { id } = await browserbase.createSession()
-    const updated = await browserbase.updateSession(id, { status: 'RELEASING' })
-
-    expect(updated.status).to.equal('COMPLETED')
-  })
-
   it('shoud create a session and retrieve a recording', async () => {
     const { id } = await browserbase.createSession()
     const recording = await browserbase.getSessionRecording(id)

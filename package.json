@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@browserbasehq/sdk",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Browserbase JS SDK",
   "main": "dist/index.js",
   "scripts": {
