@@ -24,18 +24,24 @@ export type ScreenshotOptions = {
 export type CreateSessionOptions = {
   projectId?: string
   extensionId?: string
-  fingerprint?: {
-    browserListQuery?: string
-    httpVersion?: 1 | 2
-    browsers?: Array<'chrome' | 'firefox' | 'edge' | 'safari'>
-    devices?: Array<'desktop' | 'mobile'>
-    locales?: string[]
-    operatingSystems?: Array<'windows' | 'macos' | 'linux' | 'ios' | 'android'>
-    screen?: {
-      maxHeight?: number
-      maxWidth?: number
-      minHeight?: number
-      minWidth?: number
+  browserSettings?: {
+    fingerprint?: {
+      browserListQuery?: string
+      httpVersion?: 1 | 2
+      browsers?: Array<'chrome' | 'firefox' | 'edge' | 'safari'>
+      devices?: Array<'desktop' | 'mobile'>
+      locales?: string[]
+      operatingSystems?: Array<'windows' | 'macos' | 'linux' | 'ios' | 'android'>
+      screen?: {
+        maxHeight?: number
+        maxWidth?: number
+        minHeight?: number
+        minWidth?: number
+      }
+    }
+    viewport?: {
+      width?: number
+      height?: number
     }
   }
 }
