@@ -66,7 +66,7 @@ describe('Browserbase', () => {
 
   it('should take a screenshot', { timeout: 10000 }, async () => {
     const result = await browserbase.screenshot('https://example.com')
-    expect(result.length).to.equal(29806)
+    expect(result.length).to.equal(27040)
   })
 
   it('should work with AI SDK', async () => {

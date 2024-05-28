@@ -1,4 +1,4 @@
-import { chromium } from 'playwright'
+import puppeteer from 'puppeteer-core'
 import BrowserbaseAISDK from './integrations/ai-sdk.js'
 
 export type ClientOptions = {
@@ -31,7 +31,9 @@ export type CreateSessionOptions = {
       browsers?: Array<'chrome' | 'firefox' | 'edge' | 'safari'>
       devices?: Array<'desktop' | 'mobile'>
       locales?: string[]
-      operatingSystems?: Array<'windows' | 'macos' | 'linux' | 'ios' | 'android'>
+      operatingSystems?: Array<
+        'windows' | 'macos' | 'linux' | 'ios' | 'android'
+      >
       screen?: {
         maxHeight?: number
         maxWidth?: number
@@ -252,11 +254,15 @@ export default class Browserbase {
       throw new Error('Page URL was not provided')
     }
 
-    const browser = await chromium.connectOverCDP(
-      this.getConnectURL({ sessionId: options.sessionId, proxy: options.proxy })
-    )
-    const defaultContext = browser.contexts()[0]
-    const page = defaultContext.pages()[0]
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: this.getConnectURL({
+        sessionId: options.sessionId,
+        proxy: options.proxy,
+      }),
+    })
+
+    const pages = await browser.pages()
+    const page = pages[0]
     await page.goto(url)
     let html = await page.content()
 
@@ -283,11 +289,15 @@ export default class Browserbase {
       throw new Error('Page URLs were not provided')
     }
 
-    const browser = await chromium.connectOverCDP(
-      this.getConnectURL({ sessionId: options.sessionId, proxy: options.proxy })
-    )
-    const defaultContext = browser.contexts()[0]
-    const page = defaultContext.pages()[0]
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: this.getConnectURL({
+        sessionId: options.sessionId,
+        proxy: options.proxy,
+      }),
+    })
+
+    const pages = await browser.pages()
+    const page = pages[0]
 
     for (const url of urls) {
       await page.goto(url)
@@ -318,10 +328,15 @@ export default class Browserbase {
       throw new Error('Page URL was not provided')
     }
 
-    const browser = await chromium.connectOverCDP(
-      this.getConnectURL({ sessionId: options.sessionId, proxy: options.proxy })
-    )
-    const page = await browser.newPage()
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: this.getConnectURL({
+        sessionId: options.sessionId,
+        proxy: options.proxy,
+      }),
+    })
+
+    const pages = await browser.pages()
+    const page = pages[0]
     await page.goto(url)
     const screenshot = await page.screenshot({ fullPage: options.fullPage })
     await browser.close()
