@@ -72,9 +72,9 @@ export type Session = {
 }
 
 export type SessionRecording = {
-  type?: string
+  type?: number
   time?: string
-  data?: object
+  data?: any
 }
 
 export type DebugConnectionURLs = {
@@ -90,12 +90,12 @@ export type SessionLog = {
   method?: string
   request?: {
     timestamp?: string
-    params?: object
+    params?: any
     rawBody?: string
   }
   response?: {
     timestamp?: string
-    result?: object
+    result?: any
     rawBody?: string
   }
   pageId?: string
