@@ -77,11 +77,11 @@ npm i ai openai zod
 ```js
 import OpenAI from 'openai'
 import { Browserbase } from '@browserbasehq/sdk'
-import { BrowserbaseAISDK } from '@browserbasehq/sdk/dist/integrations/ai-sdk'
+import { BrowserbaseAISDK } from '@browserbasehq/sdk'
 import {
   OpenAIStream,
   StreamingTextResponse,
-  experimental_generateText,
+  generateText,
 } from 'ai'
 
 // Create new OpenAI client
@@ -96,7 +96,7 @@ const browserbase = new Browserbase()
 const browserTool = BrowserbaseAISDK(browserbase, { textContent: true })
 
 // Load completions
-const result = await experimental_generateText({
+const result = await generateText({
   model: openai.chat('gpt-3.5-turbo'),
   tools: {
     browserTool,
