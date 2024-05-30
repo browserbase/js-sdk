@@ -1,7 +1,6 @@
 import { describe, it, beforeEach } from 'node:test'
 import { expect } from 'chai'
-import { Browserbase } from '../src'
-import { BrowserbaseAISDK } from '../src/integrations/ai-sdk'
+import { Browserbase, BrowserbaseAISDK } from '../src'
 
 describe('Browserbase', () => {
   let browserbase: Browserbase

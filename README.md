@@ -76,8 +76,7 @@ npm i ai openai zod
 
 ```js
 import OpenAI from 'openai'
-import { Browserbase } from '@browserbasehq/sdk'
-import { BrowserbaseAISDK } from '@browserbasehq/sdk'
+import { Browserbase, BrowserbaseAISDK } from '@browserbasehq/sdk'
 import {
   OpenAIStream,
   StreamingTextResponse,
