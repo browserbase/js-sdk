@@ -133,13 +133,21 @@ export default class Browserbase {
   }
 
   async createSession(options?: CreateSessionOptions): Promise<Session> {
+    const mergedOptions = { projectId: this.projectId, ...options }
+
+    if (!mergedOptions.projectId) {
+      throw new Error(
+        'a projectId is missing: use the options.projectId or BROWSERBASE_PROJECT_ID environment variable to set one.'
+      )
+    }
+
     const response = await fetch(`${this.baseAPIURL}/v1/sessions`, {
       method: 'POST',
       headers: {
         'x-bb-api-key': this.apiKey,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ projectId: this.projectId, ...options }),
+      body: JSON.stringify(mergedOptions),
     })
 
     return await response.json()
