@@ -275,13 +275,11 @@ export default class Browserbase {
     let html = await page.content()
 
     if (options.textContent) {
-      const readable = await page.evaluate(async () => {
-        const readability = await import(
-          // @ts-ignore
-          'https://cdn.skypack.dev/@mozilla/readability'
-        )
-        return new readability.Readability(document).parse()
-      })
+      const readable: { title?: string; textContent?: string } =
+        await page.evaluate(`
+        import('https://cdn.skypack.dev/@mozilla/readability').then(readability => {
+          return new readability.Readability(document).parse()
+        })`)
       html = `${readable.title}\n${readable.textContent}`
     }
 
@@ -312,13 +310,11 @@ export default class Browserbase {
       let html = await page.content()
 
       if (options.textContent) {
-        const readable = await page.evaluate(async () => {
-          const readability = await import(
-            // @ts-ignore
-            'https://cdn.skypack.dev/@mozilla/readability'
-          )
-          return new readability.Readability(document).parse()
-        })
+        const readable: { title?: string; textContent?: string } =
+          await page.evaluate(`
+          import('https://cdn.skypack.dev/@mozilla/readability').then(readability => {
+            return new readability.Readability(document).parse()
+          })`)
         html = `${readable.title}\n${readable.textContent}`
       }
 
