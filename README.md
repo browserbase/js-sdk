@@ -1,7 +1,7 @@
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="logo/dark.png"/>
-        <img alt="Browserbase logo" src="logo/light.png" style="max-width: 250px;"/>
+        <source media="(prefers-color-scheme: dark)" srcset="logo/dark.svg"/>
+        <img alt="Browserbase logo" src="logo/light.svg" width="300" />
     </picture>
 </p>
 
