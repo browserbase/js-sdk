@@ -46,6 +46,9 @@ export type CreateSessionOptions = {
       height?: number
     }
   }
+  keepAlive?: boolean
+  // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
+  timeout?: number
 }
 
 export type Session = {
@@ -53,18 +56,11 @@ export type Session = {
   createdAt: string
   startedAt: string
   endedAt?: string
+  expiresAt: string
   projectId: string
-  status?:
-    | 'NEW'
-    | 'CREATED'
-    | 'ERROR'
-    | 'RUNNING'
-    | 'REQUEST_RELEASE'
-    | 'RELEASING'
-    | 'COMPLETED'
+  status: 'RUNNING' | 'COMPLETED' | 'ERROR' | 'TIMED_OUT'
   taskId?: string
   proxyBytes?: number
-  expiresAt?: string
   avg_cpu_usage?: number
   memory_usage?: number
   details?: string
@@ -149,6 +145,34 @@ export default class Browserbase {
       },
       body: JSON.stringify(mergedOptions),
     })
+
+    return await response.json()
+  }
+
+  async completeSession(sessionId: string): Promise<Session> {
+    if (!sessionId || sessionId === '') {
+      throw new Error('sessionId is required')
+    }
+    if (!this.projectId) {
+      throw new Error(
+        'a projectId is missing: use the options.projectId or BROWSERBASE_PROJECT_ID environment variable to set one.'
+      )
+    }
+
+    const response = await fetch(
+      `${this.baseAPIURL}/v1/sessions/${sessionId}`,
+      {
+        method: 'POST',
+        headers: {
+          'x-bb-api-key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectId: this.projectId,
+          status: 'REQUEST_RELEASE',
+        }),
+      }
+    )
 
     return await response.json()
   }
