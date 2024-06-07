@@ -46,6 +46,9 @@ export type CreateSessionOptions = {
       height?: number
     }
   }
+  keepAlive?: boolean
+  // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
+  timeout?: number
 }
 
 export type Session = {
