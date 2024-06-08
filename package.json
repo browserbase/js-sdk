@@ -3,6 +3,7 @@
   "version": "1.3.0",
   "description": "Browserbase JS SDK",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "tsx --test test/*"
