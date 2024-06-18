@@ -45,6 +45,10 @@ export type CreateSessionOptions = {
       width?: number
       height?: number
     }
+    context?: {
+      id: string;
+      persist: boolean;
+    };
   }
   keepAlive?: boolean
   // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
@@ -369,6 +373,24 @@ export default class Browserbase {
     const screenshot = await page.screenshot({ fullPage: options.fullPage })
     await browser.close()
     return screenshot
+  }
+
+  async createContext(): Promise<{ id: string }> {
+    const response = await fetch(`${this.baseAPIURL}/v1/contexts`, {
+      method: 'POST',
+      headers: {
+        'x-bb-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ projectId: this.projectId }),
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to create context');
+    }
+  
+    const data = await response.json();
+    return data;
   }
 }
 
