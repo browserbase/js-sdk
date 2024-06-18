@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test'
 import { expect } from 'chai'
-import { Browserbase, BrowserbaseAISDK } from '../src'
+import { Browserbase, BrowserbaseAISDK, CreateSessionOptions } from '../src'
 
 describe('Browserbase', () => {
   let browserbase: Browserbase
@@ -72,5 +72,22 @@ describe('Browserbase', () => {
     const ai = BrowserbaseAISDK(browserbase, { textContent: true })
     const { page } = await ai.execute({ url: 'https://example.com' })
     expect(page).contain('Example Domain')
+  })
+
+  it('should create a session with dynamically created context', async () => {
+    const createContextResponse = await browserbase.createContext();
+    const contextId = createContextResponse.id;
+  
+    // Use the created context ID in session creation
+    const sessionOptions: CreateSessionOptions = {
+      browserSettings: {
+        context: {
+          id: contextId,
+          persist: true
+        }
+      }
+    };
+    const { id } = await browserbase.createSession(sessionOptions);
+    const session = await browserbase.getSession(id);
   })
 })
