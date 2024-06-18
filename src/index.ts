@@ -390,7 +390,7 @@ export default class Browserbase {
     }
   
     const data = await response.json();
-    return { id: data.id };
+    return data;
   }
 }
 
