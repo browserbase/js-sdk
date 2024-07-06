@@ -25,12 +25,12 @@ export class ContextRecorder extends EventEmitter {
   private _timers = new Set<NodeJS.Timeout>()
   private _javascriptGenerator: JavaScriptLanguageGenerator
 
-  constructor(context: BrowserContext, options: RecorderOptions) {
+  constructor(context: BrowserContext, options?: RecorderOptions) {
     super()
     this._context = context
     this._generator = new CodeGenerator(
       'chromium',
-      options.enabled ?? false,
+      options?.enabled ?? false,
       {},
       {},
       undefined,
