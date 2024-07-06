@@ -24,12 +24,13 @@
   },
   "homepage": "https://github.com/browserbase/js-sdk#readme",
   "dependencies": {
+    "playwright-core": "^1.45.1",
     "puppeteer-core": "^22.10.0",
     "zod": "^3.22.5"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.14.10",
     "chai": "^5.1.0",
     "tsx": "^4.7.2",
     "typescript": "^5.5.2"
