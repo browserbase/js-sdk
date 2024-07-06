@@ -11,6 +11,10 @@ import { createGuid } from './crypto'
 import { toClickOptions, toModifiers } from './utils'
 import { JavaScriptLanguageGenerator } from './javascript-generator'
 
+export type RecorderOptions = {
+  enabled?: boolean
+}
+
 export class ContextRecorder extends EventEmitter {
   private _context: BrowserContext
   private _generator: CodeGenerator
@@ -21,12 +25,12 @@ export class ContextRecorder extends EventEmitter {
   private _timers = new Set<NodeJS.Timeout>()
   private _javascriptGenerator: JavaScriptLanguageGenerator
 
-  constructor(context: BrowserContext) {
+  constructor(context: BrowserContext, options: RecorderOptions) {
     super()
     this._context = context
     this._generator = new CodeGenerator(
       'chromium',
-      true,
+      options.enabled ?? false,
       {},
       {},
       undefined,
