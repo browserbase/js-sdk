@@ -15,7 +15,7 @@ export type RecorderOptions = {
   enabled?: boolean
 }
 
-export class ContextRecorder extends EventEmitter {
+export class BrowserbaseRecorder extends EventEmitter {
   private _context: BrowserContext
   private _enabled: boolean
   private _generator: CodeGenerator
@@ -111,7 +111,11 @@ export class ContextRecorder extends EventEmitter {
 
     const recordMode = await page.evaluate(() => {
       // @ts-expect-error
-      return window.__bb_recordMode ?? false
+      if (window.__bb_recordModeEnabled) {
+        // @ts-expect-error
+        return window.__bb_recordModeEnabled()
+      }
+      return false
     })
 
     await page.close()
