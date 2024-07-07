@@ -235,6 +235,7 @@ export class ContextRecorder extends EventEmitter {
         //await frame.instrumentation.onBeforeCall(frame, callMetadata)
         await cb(callMetadata)
       } catch (e) {
+        console.error('error performing action', e)
         callMetadata.endTime = monotonicTime()
         //await frame.instrumentation.onAfterCall(frame, callMetadata)
         this._generator.performedActionFailed(actionInContext)
@@ -303,16 +304,22 @@ export class ContextRecorder extends EventEmitter {
   }
 
   private async _recordAction(frame: Frame, action: actions.Action) {
+    console.log('record action', action)
     // Commit last action so that no further signals are added to it.
     this._generator.commitLastAction()
 
+    console.log('committed action')
+
     const frameDescription = await this._describeFrame(frame)
+    console.log('described frame')
     const actionInContext: ActionInContext = {
       frame: frameDescription,
       action,
     }
     this._setCommittedAfterTimeout(actionInContext)
+    console.log('committed after timeout')
     this._generator.addAction(actionInContext)
+    console.log('action added')
   }
 
   private _setCommittedAfterTimeout(actionInContext: ActionInContext) {
