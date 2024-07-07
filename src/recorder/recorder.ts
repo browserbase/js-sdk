@@ -17,6 +17,7 @@ export type RecorderOptions = {
 
 export class ContextRecorder extends EventEmitter {
   private _context: BrowserContext
+  private _enabled: boolean
   private _generator: CodeGenerator
   private _pageAliases = new Map<Page, string>()
   private _lastPopupOrdinal = 0
@@ -28,6 +29,7 @@ export class ContextRecorder extends EventEmitter {
   constructor(context: BrowserContext, options?: RecorderOptions) {
     super()
     this._context = context
+    this._enabled = options?.enabled ?? false
     this._generator = new CodeGenerator(
       'chromium',
       options?.enabled ?? false,
@@ -46,6 +48,7 @@ export class ContextRecorder extends EventEmitter {
   }
 
   setEnabled(enabled: boolean) {
+    this._enabled = enabled
     this._generator.setEnabled(enabled)
   }
 
@@ -98,12 +101,25 @@ export class ContextRecorder extends EventEmitter {
   // when a browser is created with record mode it will add a global variable to the page
   // this function checks if the global variable is present and returns true if it is
   private async _ensureRecordMode(): Promise<boolean> {
+    const enabledState = this._enabled
+    // disable generator so we dont capture these actions
+    if (enabledState) {
+      this.setEnabled(false)
+    }
     const page = await this._context.newPage()
+    await page.waitForLoadState('domcontentloaded')
 
     const recordMode = await page.evaluate(() => {
       // @ts-expect-error
       return window.__bb_recordMode ?? false
     })
+
+    await page.close()
+
+    // re-enable generator
+    if (enabledState) {
+      this.setEnabled(true)
+    }
 
     return recordMode
   }
@@ -216,7 +232,7 @@ export class ContextRecorder extends EventEmitter {
   }
 
   private async _performAction(frame: Frame, action: actions.Action) {
-    //console.log('perform action', action)
+    // console.log('perform action', action)
     // Commit last action so that no further signals are added to it.
     this._generator.commitLastAction()
 
@@ -249,7 +265,7 @@ export class ContextRecorder extends EventEmitter {
       }
 
       this._generator.willPerformAction(actionInContext)
-      //console.log('will perform action', actionInContext)
+      //// console.log('will perform action', actionInContext)
       try {
         //await frame.instrumentation.onBeforeCall(frame, callMetadata)
         await cb(callMetadata)
@@ -323,22 +339,22 @@ export class ContextRecorder extends EventEmitter {
   }
 
   private async _recordAction(frame: Frame, action: actions.Action) {
-    console.log('record action', action)
+    // console.log('record action', action)
     // Commit last action so that no further signals are added to it.
     this._generator.commitLastAction()
 
-    console.log('committed action')
+    // console.log('committed action')
 
     const frameDescription = await this._describeFrame(frame)
-    console.log('described frame')
+    // console.log('described frame')
     const actionInContext: ActionInContext = {
       frame: frameDescription,
       action,
     }
     this._setCommittedAfterTimeout(actionInContext)
-    console.log('committed after timeout')
+    // console.log('committed after timeout')
     this._generator.addAction(actionInContext)
-    console.log('action added')
+    // console.log('action added')
   }
 
   private _setCommittedAfterTimeout(actionInContext: ActionInContext) {
