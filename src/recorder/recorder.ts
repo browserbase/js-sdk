@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events'
+import { EventEmitter } from 'events'
 import { CodeGenerator, ActionInContext } from './generator'
 import * as actions from './recorder-types'
 import { BrowserContext, Dialog, Page, Frame } from 'playwright-core'
@@ -17,6 +17,9 @@ export type RecorderOptions = {
 
 export class BrowserbaseRecorder extends EventEmitter {
   private _context: BrowserContext
+  // This is used in the playground to bypass the verification step since it doesnt work
+  // in the browser
+  private _skipVerify = false
   private _enabled: boolean
   private _generator: CodeGenerator
   private _pageAliases = new Map<Page, string>()
@@ -53,11 +56,13 @@ export class BrowserbaseRecorder extends EventEmitter {
   }
 
   async install() {
-    const recordMode = await this._ensureRecordMode()
-    if (!recordMode) {
-      throw new Error(
-        'Failed to install recorder: recordMode not enabled on this session'
-      )
+    if (!this._skipVerify) {
+      const recordMode = await this._ensureRecordMode()
+      if (!recordMode) {
+        throw new Error(
+          'Failed to install recorder: recordMode not enabled on this session'
+        )
+      }
     }
     this._context.on('page', (page: Page) => {
       this._onPage(page)
