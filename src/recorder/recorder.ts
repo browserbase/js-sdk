@@ -50,6 +50,12 @@ export class ContextRecorder extends EventEmitter {
   }
 
   async install() {
+    const recordMode = await this._ensureRecordMode()
+    if (!recordMode) {
+      throw new Error(
+        'Failed to install recorder: recordMode not enabled on this session'
+      )
+    }
     this._context.on('page', (page: Page) => {
       this._onPage(page)
     })
@@ -87,6 +93,19 @@ export class ContextRecorder extends EventEmitter {
         ? String(this._lastDialogOrdinal)
         : '',
     })
+  }
+
+  // when a browser is created with record mode it will add a global variable to the page
+  // this function checks if the global variable is present and returns true if it is
+  private async _ensureRecordMode(): Promise<boolean> {
+    const page = await this._context.newPage()
+
+    const recordMode = await page.evaluate(() => {
+      // @ts-expect-error
+      return window.__bb_recordMode ?? false
+    })
+
+    return recordMode
   }
 
   private async _onPage(page: Page) {

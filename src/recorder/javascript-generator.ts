@@ -10,8 +10,8 @@ import { toModifiers } from './utils'
 import type { MouseClickOptions } from './utils'
 import type { ActionInContext } from './generator'
 // TODO: rename to files
-import { asLocator } from './utils/isomorphic/locatorGenerators'
-import { escapeWithQuotes } from './utils/isomorphic/stringUtils'
+import { asLocator } from './utils/isomorphic/locator-generators'
+import { escapeWithQuotes } from './utils/isomorphic/string-utils'
 
 export class JavaScriptLanguageGenerator implements LanguageGenerator {
   id: string
