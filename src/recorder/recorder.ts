@@ -57,10 +57,10 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
 
   async install() {
     if (!this._skipVerify) {
-      const recordMode = await this._ensureRecordMode()
-      if (!recordMode) {
+      const codegenMode = await this._ensureCodegenMode()
+      if (!codegenMode) {
         throw new Error(
-          'Failed to install recorder: recordMode not enabled on this session'
+          'Failed to install generator: codegenMode not enabled on this session'
         )
       }
     }
@@ -105,7 +105,7 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
 
   // when a browser is created with record mode it will add a global variable to the page
   // this function checks if the global variable is present and returns true if it is
-  private async _ensureRecordMode(): Promise<boolean> {
+  private async _ensureCodegenMode(): Promise<boolean> {
     const enabledState = this._enabled
     // disable generator so we dont capture these actions
     if (enabledState) {
@@ -114,11 +114,11 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
     const page = await this._context.newPage()
     await page.waitForLoadState('domcontentloaded')
 
-    const recordMode = await page.evaluate(() => {
+    const codegenMode = await page.evaluate(() => {
       // @ts-expect-error
-      if (window.__bb_recordModeEnabled) {
+      if (window.__bb_codegenModeEnabled) {
         // @ts-expect-error
-        return window.__bb_recordModeEnabled()
+        return window.__bb_codegenModeEnabled()
       }
       return false
     })
@@ -130,7 +130,7 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
       this.setEnabled(true)
     }
 
-    return recordMode
+    return codegenMode
   }
 
   private async _onPage(page: Page) {
