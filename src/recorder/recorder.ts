@@ -11,11 +11,11 @@ import { createGuid } from './crypto'
 import { toClickOptions, toModifiers } from './utils'
 import { JavaScriptLanguageGenerator } from './javascript-generator'
 
-export type RecorderOptions = {
+export type GeneratorOptions = {
   enabled?: boolean
 }
 
-export class BrowserbaseRecorder extends EventEmitter {
+export class BrowserbaseCodeGenerator extends EventEmitter {
   private _context: BrowserContext
   // This is used in the playground to bypass the verification step since it doesnt work
   // in the browser
@@ -29,7 +29,7 @@ export class BrowserbaseRecorder extends EventEmitter {
   private _timers = new Set<NodeJS.Timeout>()
   private _javascriptGenerator: JavaScriptLanguageGenerator
 
-  constructor(context: BrowserContext, options?: RecorderOptions) {
+  constructor(context: BrowserContext, options?: GeneratorOptions) {
     super()
     this._context = context
     this._enabled = options?.enabled ?? false
