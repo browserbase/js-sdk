@@ -1,5 +1,10 @@
 import puppeteer from 'puppeteer-core'
 import BrowserbaseAISDK from './integrations/ai-sdk.js'
+import {
+  BrowserbaseCodeGenerator,
+  type GeneratorOptions,
+  type ActionsEvent,
+} from './recorder/recorder'
 
 export type ClientOptions = {
   apiKey?: string
@@ -46,9 +51,9 @@ export type CreateSessionOptions = {
       height?: number
     }
     context?: {
-      id: string;
-      persist: boolean;
-    };
+      id: string
+      persist: boolean
+    }
   }
   keepAlive?: boolean
   // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
@@ -383,15 +388,21 @@ export default class Browserbase {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ projectId: this.projectId }),
-    });
-  
+    })
+
     if (!response.ok) {
-      throw new Error('Failed to create context');
+      throw new Error('Failed to create context')
     }
-  
-    const data = await response.json();
-    return data;
+
+    const data = await response.json()
+    return data
   }
 }
 
-export { Browserbase, BrowserbaseAISDK }
+export {
+  Browserbase,
+  BrowserbaseAISDK,
+  BrowserbaseCodeGenerator,
+  type GeneratorOptions,
+  type ActionsEvent,
+}
