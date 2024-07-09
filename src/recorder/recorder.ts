@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { CodeGenerator, ActionInContext } from './generator'
 import * as actions from './recorder-types'
-import { BrowserContext, Dialog, Page, Frame } from 'playwright-core'
+import type { BrowserContext, Dialog, Page, Frame } from 'playwright-core'
 import { BindingSource } from 'playwright-core/types/structs'
 import { monotonicTime } from './time'
 import { raceAgainstDeadline } from './timeout-runner'
@@ -13,6 +13,10 @@ import { JavaScriptLanguageGenerator } from './javascript-generator'
 
 export type GeneratorOptions = {
   enabled?: boolean
+}
+
+export type ActionsEvent = {
+  actions: string[]
 }
 
 export class BrowserbaseCodeGenerator extends EventEmitter {
@@ -35,7 +39,7 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
     this._enabled = options?.enabled ?? false
     this._generator = new CodeGenerator(
       'chromium',
-      options?.enabled ?? false,
+      this._enabled,
       {},
       {},
       undefined,
@@ -48,6 +52,15 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
         this._generator.generateStructure(this._javascriptGenerator)
       this.emit('change', { actions })
     })
+  }
+
+  static async init(context: BrowserContext, options?: GeneratorOptions) {
+    const browserbaseCodeGenerator = new BrowserbaseCodeGenerator(
+      context,
+      options
+    )
+    await browserbaseCodeGenerator.install()
+    return browserbaseCodeGenerator
   }
 
   setEnabled(enabled: boolean) {

@@ -1,4 +1,4 @@
-import { type Point } from './recorder-types'
+import type { Point } from './recorder-types'
 
 export type SerializedValue = {
   n?: number

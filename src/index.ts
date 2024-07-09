@@ -1,7 +1,10 @@
 import puppeteer from 'puppeteer-core'
 import BrowserbaseAISDK from './integrations/ai-sdk.js'
-import { BrowserbaseCodeGenerator } from './recorder/recorder'
-import type { GeneratorOptions } from './recorder/recorder'
+import {
+  BrowserbaseCodeGenerator,
+  type GeneratorOptions,
+  type ActionsEvent,
+} from './recorder/recorder'
 
 export type ClientOptions = {
   apiKey?: string
@@ -401,4 +404,5 @@ export {
   BrowserbaseAISDK,
   BrowserbaseCodeGenerator,
   type GeneratorOptions,
+  type ActionsEvent,
 }
