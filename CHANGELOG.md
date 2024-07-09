@@ -4,4 +4,4 @@
 
 ### Patch Changes
 
-- 8b58c10: Preview release of the new Browserbase Codgen feature.
+- 8b58c10: Preview release of the new Browserbase Codegen feature.
