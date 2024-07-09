@@ -4,5 +4,7 @@
   "initialVersions": {
     "@browserbasehq/sdk": "1.4.2"
   },
-  "changesets": []
+  "changesets": [
+    "rich-sheep-tickle"
+  ]
 }
