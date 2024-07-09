@@ -50,7 +50,7 @@ export class BrowserbaseCodeGenerator extends EventEmitter {
     this._generator.on('change', () => {
       const { header, footer, actions, text } =
         this._generator.generateStructure(this._javascriptGenerator)
-      this.emit('change', { actions })
+      this.emit('action', { actions })
     })
   }
 
