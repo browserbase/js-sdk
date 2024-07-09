@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "dist/browser/tsc",
     "declaration": true,
     "lib": ["ESNext", "DOM"],
     "module": "NodeNext",
-    "target": "ESNext",
+    "target": "es2016",
     "moduleResolution": "NodeNext"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/recorder/recorder.ts"]
 }
