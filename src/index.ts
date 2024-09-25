@@ -86,6 +86,15 @@ export type DebugConnectionURLs = {
   debuggerFullscreenUrl?: string
   debuggerUrl?: string
   wsUrl?: string
+  pages?: DebugConnectionPage
+}
+
+export type DebugConnectionPage = {
+  id: string
+  url: string
+  title: string
+  debuggerUrl: string
+  debuggerFullscreenUrl: string
 }
 
 export type SessionLog = {
