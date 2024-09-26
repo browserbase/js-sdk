@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # This is required to push the release commit
+      pull-requests: write # This is required to create the release pull request
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
