@@ -54,10 +54,28 @@ export type CreateSessionOptions = {
       id: string
       persist: boolean
     }
+    blockAds?: boolean
+    solveCaptchas?: boolean
+    recordSession?: boolean
+    logSession?: boolean
   }
   keepAlive?: boolean
   // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
   timeout?: number
+  proxies?:
+    | boolean
+    | {
+        type: 'browserbase'
+        geolocation?: { country: string; state?: string; city?: string }
+        domainPattern?: string
+      }
+    | {
+        type: 'external'
+        server: string
+        domainPattern?: string
+        username?: string
+        password?: string
+      }
 }
 
 export type Session = {
@@ -68,12 +86,9 @@ export type Session = {
   expiresAt: string
   projectId: string
   status: 'RUNNING' | 'COMPLETED' | 'ERROR' | 'TIMED_OUT'
-  taskId?: string
   proxyBytes?: number
-  avg_cpu_usage?: number
-  memory_usage?: number
-  details?: string
-  logs?: string
+  keepAlive: boolean
+  contextId?: string
 }
 
 export type SessionRecording = {
