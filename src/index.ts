@@ -64,18 +64,20 @@ export type CreateSessionOptions = {
   timeout?: number
   proxies?:
     | boolean
-    | {
-        type: 'browserbase'
-        geolocation?: { country: string; state?: string; city?: string }
-        domainPattern?: string
-      }
-    | {
-        type: 'external'
-        server: string
-        domainPattern?: string
-        username?: string
-        password?: string
-      }
+    | Array<
+        | {
+            type: 'browserbase'
+            geolocation?: { country: string; state?: string; city?: string }
+            domainPattern?: string
+          }
+        | {
+            type: 'external'
+            server: string
+            domainPattern?: string
+            username?: string
+            password?: string
+          }
+      >
 }
 
 export type Session = {
