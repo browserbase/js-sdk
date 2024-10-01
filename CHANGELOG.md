@@ -1,5 +1,11 @@
 # @browserbasehq/sdk
 
+## 1.4.4
+
+### Patch Changes
+
+- 86f0a90: Fix type for custom proxies
+
 ## 1.4.3
 
 ### Patch Changes
