@@ -26,7 +26,7 @@ and LLM data retrievals.
 ### 1. Install the SDK:
 
 ```bash
-npm install -S @browserbasehq/sdk
+npm install @browserbasehq/sdk
 ```
 
 ### 2. Get your Browserbase API Key and Project ID:
@@ -71,7 +71,7 @@ const result = await browserbase.screenshot('https://www.browserbase.com', {
 Install the additional dependencies:
 
 ```
-npm i ai openai zod
+npm install ai openai zod
 ```
 
 ```js
