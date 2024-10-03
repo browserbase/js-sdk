@@ -15,18 +15,14 @@
 ## Browserbase JS SDK
 
 Browserbase is the best developer platform to reliably run, manage, and monitor headless browsers.
-
-Get browsers' full control and leverage Browserbase's
-[Infrastructure](https://docs.browserbase.com/under-the-hood), [Stealth Mode](https://docs.browserbase.com/features/stealth-mode), and
-[Session Debugger](https://docs.browserbase.com/features/sessions) to power your automation, test suites,
-and LLM data retrievals.
+Leverage Browserbase to power your automation, test suites, and LLM data retrievals.
 
 ## Installation and setup
 
 ### 1. Install the SDK:
 
 ```bash
-npm install -S @browserbasehq/sdk
+npm install @browserbasehq/sdk
 ```
 
 ### 2. Get your Browserbase API Key and Project ID:
@@ -71,7 +67,7 @@ const result = await browserbase.screenshot('https://www.browserbase.com', {
 Install the additional dependencies:
 
 ```
-npm i ai openai zod
+npm install ai openai zod
 ```
 
 ```js
@@ -106,6 +102,5 @@ const result = await generateText({
 
 ## Further reading
 
-- [See how to leverage the Session Debugger for faster development](https://docs.browserbase.com/guides/browser-remote-control#accelerate-your-local-development-with-remote-debugging)
-- [Learn more about Browserbase infrastructure](https://docs.browserbase.com/under-the-hood)
-- [Sessions API Reference](https://docs.browserbase.com/api-reference/list-all-sessions)
+- [See how to leverage the Session Live View for faster development](https://docs.browserbase.com/features/session-live-view)
+- [Sessions API Reference](https://docs.browserbase.com/reference/api/create-a-session)
