@@ -1,5 +1,11 @@
 # @browserbasehq/sdk
 
+## 1.5.0
+
+### Minor Changes
+
+- ee75dc0: Use new API URL
+
 ## 1.4.4
 
 ### Patch Changes
