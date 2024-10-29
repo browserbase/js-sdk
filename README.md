@@ -1,3 +1,5 @@
+# DEPRECATED. Please refer to v2.0.0 at [browserbase/sdk-node](https://github.com/browserbase/sdk-node)
+
 <p align="center">
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="logo/dark.svg"/>
