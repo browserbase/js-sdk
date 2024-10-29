@@ -1,6 +1,6 @@
 {
   "name": "@browserbasehq/sdk",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "Browserbase JS SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
