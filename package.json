@@ -30,7 +30,7 @@
     "zod": "^3.22.5"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.7",
+    "@changesets/cli": "^2.27.9",
     "@types/node": "^20.14.10",
     "browserify": "^17.0.0",
     "chai": "^5.1.0",
