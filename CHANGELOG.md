@@ -1,5 +1,11 @@
 # @browserbasehq/sdk
 
+## 1.5.1
+
+### Patch Changes
+
+- 5c8059e: Deprecate the current SDK in favor of v2.0.0
+
 ## 1.5.0
 
 ### Minor Changes
