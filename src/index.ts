@@ -63,21 +63,21 @@ export type CreateSessionOptions = {
   // duration in seconds. Minimum 60 (1 minute), maximum 21600 (6 hours)
   timeout?: number
   proxies?:
-    | boolean
-    | Array<
-        | {
-            type: 'browserbase'
-            geolocation?: { country: string; state?: string; city?: string }
-            domainPattern?: string
-          }
-        | {
-            type: 'external'
-            server: string
-            domainPattern?: string
-            username?: string
-            password?: string
-          }
-      >
+  | boolean
+  | Array<
+    | {
+      type: 'browserbase'
+      geolocation?: { country: string; state?: string; city?: string }
+      domainPattern?: string
+    }
+    | {
+      type: 'external'
+      server: string
+      domainPattern?: string
+      username?: string
+      password?: string
+    }
+  >
 }
 
 export type Session = {
@@ -141,15 +141,14 @@ export default class Browserbase {
   constructor(options: ClientOptions = {}) {
     this.apiKey = options.apiKey || process.env.BROWSERBASE_API_KEY!
     this.projectId = options.projectId || process.env.BROWSERBASE_PROJECT_ID!
-    this.baseAPIURL = options.baseURL || 'https://www.browserbase.com'
+    this.baseAPIURL = options.baseURL || 'https://api.browserbase.com'
     this.baseConnectURL =
       options.baseConnectURL || 'wss://connect.browserbase.com'
   }
 
   getConnectURL({ sessionId, proxy = false }: ConnectOptions = {}): string {
-    return `${this.baseConnectURL}?apiKey=${this.apiKey}${
-      sessionId ? `&sessionId=${sessionId}` : ''
-    }${proxy ? `&enableProxy=true` : ''}`
+    return `${this.baseConnectURL}?apiKey=${this.apiKey}${sessionId ? `&sessionId=${sessionId}` : ''
+      }${proxy ? `&enableProxy=true` : ''}`
   }
 
   async listSessions(): Promise<Session[]> {
