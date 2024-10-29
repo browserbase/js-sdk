@@ -1,5 +1,5 @@
 ---
-"@fake-scope/fake-pkg": patch
+"@browserbasehq/sdk": minor
 ---
 
 chore: update api url
